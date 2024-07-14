@@ -8,7 +8,9 @@
  "field_order": [
   "employee",
   "employee_name",
-  "amount"
+  "amount",
+  "id_number",
+  "mobile_number"
  ],
  "fields": [
   {
@@ -30,12 +32,26 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Employee Name"
+  },
+  {
+   "fetch_from": "employee.national_id",
+   "fieldname": "id_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "ID Number"
+  },
+  {
+   "fetch_from": "employee.custom_msisdn",
+   "fieldname": "mobile_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mobile Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-28 08:27:43.330454",
+ "modified": "2024-07-14 10:10:45.871581",
  "modified_by": "Administrator",
  "module": "NL Piece Rate Pay",
  "name": "Casual Payment Record",
