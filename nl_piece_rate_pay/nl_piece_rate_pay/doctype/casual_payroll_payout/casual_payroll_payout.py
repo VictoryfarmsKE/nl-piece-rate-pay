@@ -16,13 +16,13 @@ class CasualPayrollPayout(Document):
 			attendance = frappe.db.get_all("Attendance", {"attendance_date": self.attendance_date, "shift": self.shift_type, "company":self.company, "employee": row.employee, "docstatus": 1})
 			if attendance:
 				attendance = attendance[0]["name"]
-			employee_checkin=frappe.get_all("Employee Checkin", filters={"attendance": attendance, "employee":row.employee, "log_type":"IN"}, fields=["time"])
-			employee_checkout=frappe.get_all("Employee Checkin", filters={"attendance": attendance, "employee":row.employee, "log_type":"OUT"}, fields=["time"])
+				employee_checkin=frappe.get_all("Employee Checkin", filters={"attendance": attendance, "employee":row.employee, "log_type":"IN"}, fields=["time"])
+				employee_checkout=frappe.get_all("Employee Checkin", filters={"attendance": attendance, "employee":row.employee, "log_type":"OUT"}, fields=["time"])
 		
-			if employee_checkin:
-				row.checkin = employee_checkin[0]["time"]
-			if employee_checkout:
-				row.checkout = employee_checkout[0]["time"]
+				if employee_checkin:
+					row.checkin = employee_checkin[0]["time"]
+				if employee_checkout:
+					row.checkout = employee_checkout[0]["time"]
 
 
 @frappe.whitelist(allow_guest=True)
