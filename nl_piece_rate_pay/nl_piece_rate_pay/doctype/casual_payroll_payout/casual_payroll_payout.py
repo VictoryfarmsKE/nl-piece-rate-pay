@@ -3,6 +3,7 @@
 from datetime import datetime
 
 import frappe
+import json
 from frappe.model.document import Document
 
 class CasualPayrollPayout(Document):
@@ -84,4 +85,37 @@ def get_activity_items():
 # 			salary_component_doc.save()
 # 			frappe.db.commit()
 # 	frappe.msgprint(str(salary_component))
+
+@frappe.whitelist()
+def create_casual_salary_assignment(selected_values, attendance_date):
+	if isinstance(selected_values, str):
+		selected_values = json.loads(selected_values)
 	
+	if isinstance(attendance_date, str):
+		attendance_date = json.loads(attendance_date)
+
+	cs_doc = frappe.new_doc("Casual Salary Structure Assignment Tool")
+	cs_doc.start_date = min(attendance_date)
+	cs_doc.end_date = max(attendance_date)
+	cs_doc.salary_structure = "Casual Piece Rate"
+
+	employee_data = get_employee_data(selected_values)
+
+	for employee in employee_data:
+		cs_doc.append("casuals_weekly_amount", {
+			"employee": employee,
+			"amount": employee_data.get(employee)
+		})
+	cs_doc.save()
+
+def get_employee_data(casual_payroll):
+	employee_data = {}
+
+	for row in casual_payroll:
+		payment_records = frappe.db.get_all("Casual Payroll Payout Employee", {"parent": row}, ["employee", "amount"])
+
+		for record in payment_records:
+			employee_data.setdefault(record.employee, 0)
+			employee_data[record.employee] += record.amount
+	
+	return employee_data
